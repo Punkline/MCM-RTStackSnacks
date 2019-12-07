@@ -1,0 +1,61 @@
+-==-
+
+RT Stack Snacks
+Pack generated data snacks into a bogus runtime stack frame
+Snack back on them later using a global set of symbols
+- Requires the "RTStackSnacks.s" module
+# see module comments for more details on configuration
+[Punkline]
+
+NTSC 1.02 ----- 801a4518 --- 90010004 -> Branch
+.include "RTStackSnacks.s"
+# see module comments for more details on configuration
+
+# --- Code start:
+# r0 already = lr
+
+lis r3, -RTStackSnacks.bogusframesize@h
+ori r3, r3, (-RTStackSnacks.bogusframesize) & 0xFFFF
+stwux  sp, sp, r3
+subfic r3, r3, 4
+stwx r0, sp, r3
+# bogus prolog makes room for our snacks
+
+subi r4, r3, 0x40
+addi r3, sp, 0x20
+stw r3, -0x2018(rtoc)
+lis r0, 0x8000c160@h
+ori r12, r0, 0x8000c160@l
+mtlr r12
+blrl
+# Zero area length
+
+bl _predef_data_blrl
+mflr r12
+stw r12, -0x2014(rtoc)
+# at this point, stacksnacks is ready
+
+# --- extra setup goes here:
+RTStackSnacks.SetupInstructions
+
+b _return
+
+_predef_data_blrl:
+blrl
+_predef_data:
+RTStackSnacks.PredefDataEmitter
+
+_return:
+lis r3, 0x8048
+.long 0
+
+---------- 0x802F1B88 --- C822DFE8 -> C82280A0
+---------- 0x802F1B34 --- C822DFE8 -> C82280A0
+---------- 0x802F1AF4 --- C822DFE8 -> C82280A0
+---------- 0x802F1A88 --- C822DFE8 -> C82280A0
+---------- 0x802F1A48 --- C822DFE8 -> C82280A0
+---------- 0x802F1950 --- C842DFE8 -> C84280A0
+---------- 0x804DD9C8 --- 4330000080000000 -> 0000000000000000
+# mytoc 335
+# 804DD9C8 -0x2018(rtoc)
+# 804DD9CC -0x2014(rtoc)
