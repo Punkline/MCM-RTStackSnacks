@@ -52,9 +52,10 @@ RTStackSnacks.included=1
 # --- User Params:
 RTStackSnacks.SnackRack.size = 0x800
 # This is a number of bytes that are left undefined in the
-#  snack allocation frame. (The 'snack rack')
-# - this is padding, made in addition to the total size
-# - access it using offset 'RTStackSnacks.xSnackRack'
+#  snack allocation frame. (The 'Snack Rack')
+# - access the Snack Rack using offset 'RTStackSnacks.xSnackRack'
+#   - this is padding, made in addition to the total size
+#   - it is initially zeroed out with the rest of the snack allocations
 
 enum.debug = 0
 # Setting this to 1 will stop the code from installing, but

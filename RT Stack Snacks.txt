@@ -1,15 +1,17 @@
 -==-
 
 RT Stack Snacks
-Pack generated data snacks into a bogus runtime stack frame
-Snack back on them later using a global set of symbols
+Pack snacks into a fixed runtime stack frame that does not get destroyed
+Snack back on them later using offset symbols that can be imported
 - Requires the "RTStackSnacks.s" module
 # see module comments for more details on configuration
+# for more info, go to - https://smashboards.com/threads/rt-stack-snacks.495093/
 [Punkline]
 
 NTSC 1.02 ----- 801a4518 --- 90010004 -> Branch
 .include "RTStackSnacks.s"
 # see module comments for more details on configuration
+# for more info, go to - https://smashboards.com/threads/rt-stack-snacks.495093/
 
 # --- Code start:
 # r0 already = lr
@@ -49,6 +51,7 @@ _return:
 lis r3, 0x8048
 .long 0
 
+---------- 0x801a451c --- 9421ffe0 -> 60000000
 ---------- 0x802F1B88 --- C822DFE8 -> C82280A0
 ---------- 0x802F1B34 --- C822DFE8 -> C82280A0
 ---------- 0x802F1AF4 --- C822DFE8 -> C82280A0
@@ -57,5 +60,5 @@ lis r3, 0x8048
 ---------- 0x802F1950 --- C842DFE8 -> C84280A0
 ---------- 0x804DD9C8 --- 4330000080000000 -> 0000000000000000
 # mytoc 335
-# 804DD9C8 -0x2018(rtoc)
-# 804DD9CC -0x2014(rtoc)
+# -0x2018(rtoc)  # 804DD9C8: Snacks pointer
+# -0x2014(rtoc)  # 804DD9CC: Predef pointer
